@@ -105,8 +105,32 @@ const logout = (req, res)=>{
     }
 }
 
-const getMe = (req, res)=>{
+const getMe = async (req, res)=>{
+    try{
+        // payload of user from req, 
+        // that has been attached while verifyToken
+        // const user = req.user;
+        const {id, role} = req.user;
 
+        // search user by id in db
+        const result = await User.findById(id);
+
+        if(!result){
+            return res.status(404).json({
+                message : "failed"
+            })
+        }
+
+        return res.status(201).json({
+            message : "Success",
+            user : result
+        })
+    }
+    catch(err){
+         return res.status(501).json({
+            message : "Server Error",
+        })
+    }
 }
 
 export {register, login, logout, getMe};
