@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import connectDB from './config/db.js'
 import authRoutes from './routes/authRoutes.js'
 import adminRoutes from './routes/adminRoutes.js'
@@ -11,6 +12,22 @@ connectDB();
 // glocal middlewares
 app.use(express.json());
 app.use(cookieParser());
+
+
+app.use(
+    cors({
+        origin: "http://localhost:5173",
+        credentials: true,
+    }
+))
+
+function print(req, res, next){
+    console.log("Entered backend");
+    console.log(req.body);
+    next();
+}
+
+app.use(print);
 
 app.get('/', (req, res)=>{
     res.send("Hello World");

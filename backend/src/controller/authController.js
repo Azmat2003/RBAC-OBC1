@@ -41,7 +41,7 @@ const login = async (req, res)=>{
 
         if(!data){
             return res.status(401).json({
-                message : "User does not exist"
+                message : "User does not exist",
             })
         }
 
@@ -77,6 +77,10 @@ const login = async (req, res)=>{
         // 2. inside json
         return res.status(201).json({
             message : "Logged in",
+            user : {
+                    name: data.name,
+                    role : data.role
+                }
             // token,
         })
     }

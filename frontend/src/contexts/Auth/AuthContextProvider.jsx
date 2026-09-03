@@ -4,12 +4,12 @@ import AuthContext from './AuthContext.js'
 
 function AuthContextProvider({children}) {
     const [user, setUser] = useState(null);
+    const [base, setBase] = useState('http://localhost:3000');
 
     async function getMe(){
         try{
             // get request
             // domain/api/auth/me
-            const base = import.meta.env.BASE_URL;
             const api = base + '/api/auth/me';
 
             const res = await fetch(api, {
@@ -40,9 +40,9 @@ function AuthContextProvider({children}) {
     // frontend
     // does not have any req or res
     const login = async (email, password)=>{
-        try{
             // /api/auth/login
-            const base = import.meta.env.BASE_URL;
+
+            console.log("base",base)
             const api = base + '/api/auth/login';
 
             const options = {
@@ -58,15 +58,19 @@ function AuthContextProvider({children}) {
             }
             const res = await fetch(api, options);
             const data = await res.json();
+            console.log("data inside login", data);
             if(!res.ok){
                 throw Error(data.message);
             }
 
             setUser(data.user);
-        }
-        catch(err){
-            // handle the error
-        }
+
+            return data;
+        // }
+        // catch(err){
+        //     // handle the error
+        //     console.log("err in login", err);
+        // }
     }
 
     // register => not affecting the user
@@ -75,8 +79,8 @@ function AuthContextProvider({children}) {
     const logout = async ()=>{
         try{
             // /api/auth/login
-            const base = import.meta.env.BASE_URL;
-            const api = base + '/api/auth/login';
+            // const base = import.meta.env.BASE_URL;
+            const api = base + '/api/auth/logout';
 
             const options = {
                 method : "POST",
@@ -101,7 +105,8 @@ function AuthContextProvider({children}) {
     <AuthContext.Provider value={{
         user, 
         login,
-        logout
+        logout,
+        base
     }}>
         {children}
     </AuthContext.Provider>
